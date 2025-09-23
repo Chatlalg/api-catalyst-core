@@ -1,0 +1,22 @@
+{
+  "name": "api-catalyst",
+  "version": "1.0.0",
+  "description": "Caching service and analytics for apis",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "build:clean": "rm -rf dist && npm run build",
+    "test": "tsx src/test.ts",
+    "start": "node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "axios": "^1.12.2",
+    "redis": "^5.8.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

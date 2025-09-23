@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    // REQUIRED: Add these missing settings
+    "rootDir": "./src",
+    "outDir": "./dist",
+    
+    // REMOVE: jsx and react-jsx aren't needed for a Node.js package
+    // "jsx": "react-jsx",
+    
+    // CHANGE: Add node types back
+    "types": ["node"],
+    "lib": ["esnext"],
+    
+    // Keep your good settings
+    "module": "nodenext",
+    "target": "esnext",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests"]
+}
