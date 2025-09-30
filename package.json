@@ -2,7 +2,7 @@
   "name": "api-catalyst",
   "version": "1.0.0",
   "description": "Caching service and analytics for apis",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
