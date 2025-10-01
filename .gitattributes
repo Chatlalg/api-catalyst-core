@@ -1,0 +1,21 @@
+# Enforce LF line endings for all source files
+* text=auto eol=lf
+
+# Windows-specific scripts keep CRLF
+*.bat text eol=crlf
+
+# Shell scripts always LF
+*.sh text eol=lf
+
+# Mark binary files to avoid diff/line-ending changes
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+
+# Optional: lock package-lock.json so Git uses JSON merge driver
+package-lock.json merge=union
