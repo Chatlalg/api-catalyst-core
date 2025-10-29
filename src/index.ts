@@ -25,16 +25,38 @@ export class ApiCatalyst {
 
     async get(route: string, config?: AxiosRequestConfig): Promise<any> {
         try {
+            const startTime = performance.now();
+            let data, responseStatusCode = 200;
             const cacheHit: number = await this.client.exists(route);
             if (cacheHit) {
                 const cacheResponse = await this.client.hGetAll(route);
-                const data = JSON.parse(cacheResponse.fields as string)
-                return { data };
+                const dataFromCache = JSON.parse(cacheResponse.fields as string)
+                data = { data: dataFromCache };
+            } else {
+                const apiResponse = await axios.get(route, config);
+                responseStatusCode = apiResponse.status;
+                const fields = JSON.stringify(apiResponse.data)
+                const hydrateCache = await this.client.HSET(route, { fields });
+                data = apiResponse;
             }
-            const apiResponse = await axios.get(route, config);
-            const fields = JSON.stringify(apiResponse.data)
-            const hydrateCache = await this.client.HSET(route, { fields });
-            return apiResponse;
+            const endTime = performance.now();
+            try {
+                const logData = await axios.post("http://localhost:3000/logs/insertLog", {
+                    cacheHit,
+                    timestamp: new Date(),
+                    roundTripTime: endTime - startTime,
+                    responseStatusCode,
+                    httpMethod: "GET",
+                    url: route
+                }, {
+                    headers: {
+                        Authorization: `Bearer 1234567890`
+                    }
+                })
+            } catch (error) {
+                console.log("Failed to log entry", error)
+            }
+            return data;
         } catch (error) {
             console.log("Internal server error:", error)
             return;
