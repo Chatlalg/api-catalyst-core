@@ -1,10 +1,12 @@
 import { createClient } from "redis"
 import type { RedisClientOptions } from "redis"
 import type { RedisClientType } from "./types.js";
+import axios, { AxiosError, type AxiosRequestConfig } from "axios"
 
 export class ApiCatalyst {
     private config: RedisClientOptions = {};
     private client: RedisClientType;
+    private api_key: string = "";
 
     constructor(config: RedisClientOptions) {
         this.config = config;
@@ -21,6 +23,24 @@ export class ApiCatalyst {
         }
     }
 
+    async get(route: string, config?: AxiosRequestConfig): Promise<any> {
+        try {
+            const cacheHit: number = await this.client.exists(route);
+            if (cacheHit) {
+                const cacheResponse = await this.client.hGetAll(route);
+                const data = JSON.parse(cacheResponse.fields as string)
+                return { data };
+            }
+            const apiResponse = await axios.get(route, config);
+            const fields = JSON.stringify(apiResponse.data)
+            const hydrateCache = await this.client.HSET(route, { fields });
+            return apiResponse;
+        } catch (error) {
+            console.log("Internal server error:", error)
+            return;
+        }
+    }
+
     destroy(): void {
         try {
             const response = this.client.destroy();
@@ -30,31 +50,5 @@ export class ApiCatalyst {
         }
     }
 
-    async set(key: string, value: string): Promise<string | null | undefined> {
-        try {
-            const response = await this.client.set(key, value);
-            return response;
-        } catch (error) {
-            console.error(`Error setting key ${key}:`, error);
-        }
-    }
 
-    async get(key: string): Promise<string | null> {
-        try {
-            const response = await this.client.get(key);
-            return response;
-        } catch (error) {
-            console.error(`Error getting key ${key}:`, error);
-            return null;
-        }
-    }
-
-    async del(key: string): Promise<number | undefined> {
-        try {
-            const response = await this.client.del(key);
-            return response
-        } catch (error) {
-            console.error(`Error deleting key ${key}:`, error);
-        }
-    }
 }
