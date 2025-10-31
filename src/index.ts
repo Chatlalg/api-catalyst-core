@@ -1,6 +1,6 @@
 import { createClient } from "redis"
 import type { RedisClientOptions } from "redis"
-import type { RedisClientType } from "./types.js";
+import type { AuthenticationConfig, RedisClientType } from "./types.js";
 import axios, { AxiosError, type AxiosRequestConfig } from "axios"
 
 export class ApiCatalyst {
@@ -23,7 +23,7 @@ export class ApiCatalyst {
         }
     }
 
-    async get(route: string, api_key: string, config?: AxiosRequestConfig,): Promise<any> {
+    async get(route: string, { auth }: { auth: AuthenticationConfig }, config?: AxiosRequestConfig,): Promise<any> {
         try {
             const startTime = performance.now();
             let data, responseStatusCode = 200;
@@ -50,7 +50,8 @@ export class ApiCatalyst {
                     url: route
                 }, {
                     headers: {
-                        Authorization: `Bearer ${api_key}`
+                        Authorization: `Bearer ${auth.api_key}`,
+                        email : auth.email
                     }
                 })
             } catch (error) {
