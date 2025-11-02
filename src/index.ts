@@ -23,7 +23,7 @@ export class ApiCatalyst {
         }
     }
 
-    async get(route: string, { auth }: { auth: AuthenticationConfig }, config?: AxiosRequestConfig,): Promise<any> {
+    async get(route: string, auth: AuthenticationConfig, config?: AxiosRequestConfig): Promise<any> {
         try {
             const startTime = performance.now();
             let data, responseStatusCode = 200;
@@ -51,7 +51,7 @@ export class ApiCatalyst {
                 }, {
                     headers: {
                         Authorization: `Bearer ${auth.api_key}`,
-                        email : auth.email
+                        'email': auth.email,
                     }
                 })
             } catch (error) {
