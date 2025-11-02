@@ -41,6 +41,7 @@ export class ApiCatalyst {
             }
             const endTime = performance.now();
             try {
+                
                 const logData = await axios.post("http://localhost:3000/logs/insertLog", {
                     cacheHit,
                     timestamp: new Date(),
