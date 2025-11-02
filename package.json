@@ -1,6 +1,6 @@
 {
   "name": "api-catalyst",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Caching service and analytics for apis",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
